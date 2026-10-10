@@ -1,0 +1,50 @@
+---
+import type { BasePageData } from '@mintfolio/core/astro';
+import type { ThemeContext } from '@mintfolio/core/theme';
+import SeoHead from '@mintfolio/core/components/SeoHead.astro';
+import type { PressSettings } from '../settings';
+import '../styles/press.css';
+interface Props { theme: ThemeContext<PressSettings>; page: BasePageData; }
+const { theme, page } = Astro.props;
+const home = page.kind === 'home';
+const total = (await theme.content.posts()).total;
+const masthead = theme.settings.masthead.trim() || theme.site.title;
+const current = (url: string) => url === page.url || (url === theme.urls.archive() && ['post', 'archive'].includes(page.kind));
+---
+<!doctype html>
+<html lang={theme.site.language}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content={theme.settings.paperColor} />
+    <SeoHead seo={page.seo} />
+  </head>
+  <body class:list={['press-site', { 'press-site--home': home }]} style={`--accent: ${theme.settings.accentColor}; --paper: ${theme.settings.paperColor};`}>
+    <a class="skip-link" href="#main">跳至正文</a>
+    <div class="site-frame">
+      <header class="site-header">
+        <div class="imprint-bar">
+          <a class="site-name" href={theme.urls.home()}>{theme.site.title}</a>
+          <span class="imprint-note">独立写作 · 数字刊物</span>
+          <a class="imprint-feed" href={theme.urls.rss()}>RSS 订阅 <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="masthead-row">
+          <a href={theme.urls.home()} class="masthead" aria-label={theme.site.title + ' 首页'}>{masthead}</a>
+          {home && <span class="masthead-mark" aria-hidden="true"><span>READ</span><b>✳</b><span>THINK / WRITE</span></span>}
+        </div>
+        <nav class="site-nav" aria-label="主导航">
+          <div class="site-nav__links">{theme.navigation.map(link => <a href={link.url} aria-current={current(link.url) ? 'page' : undefined}>{link.label}</a>)}</div>
+          <a class="site-nav__search" href={theme.urls.archive() + '#search'}><span aria-hidden="true">⌕</span> 搜索</a>
+        </nav>
+      </header>
+      <main id="main" tabindex="-1"><slot /></main>
+      <footer class="site-footer">
+        <div class="footer-main">
+          <div><p class="eyebrow">END OF THIS PAGE, NOT THE STORY.</p><p class="footer-statement">保持好奇<span aria-hidden="true">↗</span></p></div>
+          <div class="footer-side"><a href={theme.urls.rss()}>订阅后续文字 <span aria-hidden="true">↗</span></a><p>{theme.site.description || theme.site.profile.bio}</p><span class="mono">文字档案 / {String(total).padStart(3, '0')} 篇</span></div>
+        </div>
+        <div class="footer-fineprint"><span>© {new Date().getFullYear()} {theme.site.profile.name || theme.site.title}</span><span>Mintfolio <span aria-hidden="true">/</span> Press</span>{theme.site.icp && <a href="https://beian.miit.gov.cn/">{theme.site.icp}</a>}<a href="#main">回到页首 ↑</a></div>
+      </footer>
+    </div>
+  </body>
+</html>

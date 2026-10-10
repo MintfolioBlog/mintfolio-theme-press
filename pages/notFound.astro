@@ -1,0 +1,13 @@
+---
+import type { NotFoundPageData, PageProps } from '@mintfolio/core/astro';
+import type { PressSettings } from '../settings';
+import Shell from '../layouts/Shell.astro';
+type Props = PageProps<PressSettings, NotFoundPageData>;
+const { theme, page } = Astro.props;
+---
+<Shell theme={theme} page={page}>
+  <section class="missing-page">
+    <div class="missing-number" aria-hidden="true">4<span>0</span>4</div>
+    <div class="missing-copy"><p class="eyebrow">LOST IN PRINT / 404</p><h1>这一页，<br />还没印出来。</h1><p>这个地址可能已经更改。回到文章档案，也许能找到你正在寻找的文字。</p><div><a class="ink-button" href={theme.urls.archive()}>翻阅文章档案 ↗</a><a class="text-link" href={theme.urls.home()}>返回首页 ↗</a></div></div>
+  </section>
+</Shell>

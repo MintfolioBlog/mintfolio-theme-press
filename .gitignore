@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.astro/
+.cache/
+artifacts/
+*.log
+.env
+.env.*
+/*.tgz
+
+.preview/
+*.bak
+test-results/
+playwright-report/

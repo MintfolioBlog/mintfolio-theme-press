@@ -1,0 +1,50 @@
+---
+import type { PageProps, PostPageData } from '@mintfolio/core/astro';
+import ProtectedArticle from '@mintfolio/core/components/ProtectedArticle.astro';
+import type { PressSettings } from '../settings';
+import Shell from '../layouts/Shell.astro';
+import Meta from '../components/Meta.astro';
+import Outline from '../components/Outline.astro';
+import PostRow from '../components/PostRow.astro';
+import { imageSrc } from '../utils/display';
+type Props = PageProps<PressSettings, PostPageData>;
+const { theme, page } = Astro.props;
+const cover = imageSrc(page.post.cover);
+---
+<Shell theme={theme} page={page}>
+  <header class="article-heading">
+    <div class="article-rubric"><a href={page.post.category.url}>{page.post.category.label}</a><span>ESSAY / 文字</span></div>
+    <h1>{page.post.title}</h1>
+    {page.post.description && <p class="article-deck">{page.post.description}</p>}
+    <Meta post={page.post} language={theme.site.language} timezone={theme.site.blog?.timezone} />
+    {page.post.tags.length > 0 && <nav class="article-tags" aria-label="文章标签">{page.post.tags.map(tag => <a href={tag.url}>#{tag.label}</a>)}</nav>}
+  </header>
+  {cover && <figure class="article-cover"><img src={cover} alt={page.post.title} width="1280" height="720" /></figure>}
+  <div class="article-layout">
+    <aside class="article-margin">
+      {page.body.kind === 'public' && <Outline headings={page.body.headings} />}
+      <div class="reading-stamp"><span aria-hidden="true">✳</span><p class="mono">READ SLOWLY.<br />THINK FREELY.</p></div>
+    </aside>
+    <div class="article-main">
+      <article class="press-prose" aria-label="文章正文">
+        {page.body.kind === 'protected' ? <ProtectedArticle body={page.body} /> : <div set:html={page.body.html} />}
+      </article>
+      <div class="article-end"><span class="eyebrow">END OF ARTICLE</span><span aria-hidden="true">■</span></div>
+      {page.post.series && !!page.seriesPosts?.length && (
+        <section class="series-index" aria-labelledby="series-heading"><p class="eyebrow">THE SERIES / 连载</p><h2 id="series-heading"><a href={page.post.series.url}>{page.post.series.label} ↗</a></h2><ol>{page.seriesPosts.map(post => <li><a href={post.url} aria-current={post.id === page.post.id ? 'page' : undefined}>{post.title}{post.id === page.post.id && <span>正在阅读</span>}</a></li>)}</ol></section>
+      )}
+      {(page.previous || page.next) && (
+        <nav class="article-neighbors" aria-label="相邻文章">
+          {page.previous ? <a href={page.previous.url} rel="prev"><span class="eyebrow">← 上一篇</span><strong>{page.previous.title}</strong></a> : <div></div>}
+          {page.next ? <a href={page.next.url} rel="next"><span class="eyebrow">下一篇 →</span><strong>{page.next.title}</strong></a> : <div></div>}
+        </nav>
+      )}
+    </div>
+  </div>
+  {!!page.related?.length && (
+    <section class="related-section" aria-labelledby="related-heading">
+      <div class="section-heading"><div><p class="eyebrow">KEEP READING</p><h2 id="related-heading">顺着文字，再走一点</h2></div><span class="mono">RELATED / {String(page.related.length).padStart(2, '0')}</span></div>
+      <div class="related-grid">{page.related.slice(0, 3).map((post, index) => <PostRow post={post} index={index + 1} compact language={theme.site.language} timezone={theme.site.blog?.timezone} />)}</div>
+    </section>
+  )}
+</Shell>

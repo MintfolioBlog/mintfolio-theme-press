@@ -1,0 +1,6 @@
+---
+import type { ArticleHeading } from '@mintfolio/core/astro';
+interface Props { headings: ArticleHeading[]; }
+const headings = Astro.props.headings.filter(heading => heading.depth <= 3);
+---
+{headings.length > 0 && <nav class="article-outline" aria-label="本文目录"><p class="eyebrow">ON THIS PAGE / 目录</p><ol>{headings.map(heading => <li style={`--level: ${heading.depth};`}><a href={'#' + heading.slug}>{heading.text}</a></li>)}</ol></nav>}
