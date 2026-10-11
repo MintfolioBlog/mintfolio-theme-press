@@ -1,6 +1,6 @@
 {
   "name": "@mintfolio/theme-press",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Press: an independent magazine theme for Mintfolio, with bold type and quiet reading.",
   "type": "module",
   "engines": {
@@ -17,7 +17,8 @@
     "config",
     "README.md",
     "LICENSE",
-    "THIRD_PARTY_NOTICES.md"
+    "THIRD_PARTY_NOTICES.md",
+    "assets"
   ],
   "exports": {
     "./theme": "./theme.mjs",
@@ -28,11 +29,11 @@
     "configTemplate": "./config/theme-press.config.mjs"
   },
   "peerDependencies": {
-    "@mintfolio/core": "^0.3.0 || ^0.4.0",
+    "@mintfolio/core": "^0.4.1",
     "astro": "^7.3.2"
   },
   "devDependencies": {
-    "@mintfolio/core": "^0.3.0 || ^0.4.0",
+    "@mintfolio/core": "^0.4.1",
     "@astrojs/check": "^0.9.10",
     "astro": "^7.3.2",
     "typescript": "npm:@typescript/typescript6@^6.0.2"
