@@ -1,11 +1,33 @@
-/** Press display settings. Content and navigation stay in site.config.ts. */
+/**
+ * Press 完整设置模板：启用主题时由 Core 写入 _mintfolio/theme.config.mjs 的 settings。
+ * 数组示例保持注释，初始值保留主题默认行为。站点资料写在 site.config.ts。
+ */
 export default {
+  // 印刷强调色，格式 '#RRGGBB'，用于几何封面、标记和交互反馈。默认 '#e6482e'（朱红）。
+  // 也可以试试酸黄 '#d0e527'。
   accentColor: '#e6482e',
+
+  // 纸张底色，格式 '#RRGGBB'。默认 '#f3efe5'。建议用浅色，以保持墨黑正文和细线清晰。
   paperColor: '#f3efe5',
+
+  // 页面顶部的巨型刊头文字。默认 'PRESS'；设为 '' 时使用站点名称。
+  // 英文以大写显示；字号按文字长度自动缩放，短词效果最好。
   masthead: 'PRESS',
-  heroHeadline: '让文字，\n留下回声。',
+
+  // 首页主标题，用 \n 换行。默认 ''，即使用站点描述；没有站点描述时使用站点名称。
+  // 例如：'让文字，\n留下回声。'
+  heroHeadline: '',
+
+  // 首页引言，显示在主标题下方。默认 ''。
+  // 留空时：主标题用了站点描述，就显示作者简介；否则显示站点描述或作者简介。
   heroSubtitle: '',
-  editorNote: '观察。思考。\n然后，把它写下来。',
+
+  // 页边手记：首页侧栏的大字短句，用 \n 换行。默认 ''，即使用个人资料中的个性签名；两者都为空时隐藏。
+  editorNote: '',
+
+  // 首页显示的文章数量，范围 1–20。默认 6。
   homePostCount: 6,
+
+  // 首篇文章没有封面时，是否显示主题自带的几何插画。默认 true；false 时显示简洁的字样封面。
   showGeometry: true,
 };

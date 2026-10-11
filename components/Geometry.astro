@@ -1,7 +1,5 @@
 ---
 /** Original vector artwork; inherits the theme colors and needs no external asset. */
-interface Props { label?: string; }
-const { label = 'READ / WRITE / REPEAT' } = Astro.props;
 const clipId = 'press-print-' + crypto.randomUUID();
 ---
 <svg class="press-geometry" viewBox="0 0 640 660" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
@@ -17,7 +15,5 @@ const clipId = 'press-print-' + crypto.randomUUID();
     <circle cx="330" cy="428" r="85" fill="var(--paper)" />
     <circle cx="330" cy="428" r="37" fill="var(--ink)" />
     <path d="M44 55h31m-15-15v30M566 598h31m-15-15v30" stroke="var(--ink)" stroke-width="1.5" />
-    <rect x="46" y="584" width="224" height="26" fill="var(--paper)" />
-    <text x="54" y="602" fill="var(--ink)" font-family="monospace" font-size="13" letter-spacing="1.4">{label}</text>
   </g>
 </svg>

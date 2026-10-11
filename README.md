@@ -6,7 +6,7 @@ Press 是一个为长文与日常记录设计的 Mintfolio 主题。奶油纸色
 
 ## 使用
 
-需要 Node.js 22.12.0 及以上、`@mintfolio/core ^0.3.0` 和 Astro `^7.3.2`。主题契约版本为 `^1.1.0`。
+需要 Node.js 22.12.0 及以上、`@mintfolio/core ^0.4.2` 和 Astro `^7.3.2`。主题契约版本为 `^1.4.0`。
 
 在现有 Mintfolio 站点中安装并启用：
 
@@ -18,21 +18,23 @@ mintfolio dev
 使用本地安装包时：
 
 ```sh
-mintfolio theme install ./mintfolio-theme-press-0.4.0.tgz --use
+mintfolio theme install ./mintfolio-theme-press-0.4.1.tgz --use
 ```
 
 切换后 Core 会在站点 `theme.config.mjs` 的 `settings` 中写入带注释的设置，编辑它控制外观；站点名称、个人资料、导航、文章、作者和订阅配置仍位于 `site.config.ts` 及内容目录中。
 
 ## 外观设置
 
+完整示例见 [examples/theme.config.mjs](examples/theme.config.mjs)：列出全部设置项，逐项注明用途、默认值和可选值，可以直接复制为站点的 `_mintfolio/theme.config.mjs`。
+
 ```js
 settings: {
   accentColor: '#e6482e',
   paperColor: '#f3efe5',
   masthead: 'PRESS',
-  heroHeadline: '让文字，\n留下回声。',
+  heroHeadline: '',
   heroSubtitle: '',
-  editorNote: '观察。思考。\n然后，把它写下来。',
+  editorNote: '',
   homePostCount: 6,
   showGeometry: true,
 },
@@ -42,10 +44,10 @@ settings: {
 | --- | --- |
 | `accentColor` | 强调色，用于几何封面、标记和交互反馈。默认朱红，也可尝试酸黄 `#d0e527`。 |
 | `paperColor` | 纸张底色，建议保持浅色，以配合墨黑文字。 |
-| `masthead` | 巨型刊头，建议 3–8 个英文字母或 2–4 个汉字。 |
-| `heroHeadline` | 首页主标题，支持用 `\n` 换行。留空时使用站点名称。 |
-| `heroSubtitle` | 首页引言，留空时使用站点介绍或个人简介。 |
-| `editorNote` | 首页页边手记，支持换行。 |
+| `masthead` | 页面顶部的巨型刊头文字，默认 `PRESS`，留空时使用站点名称。英文会以大写显示。字号按文字长度自动缩放，保证在一行内放下；太长时字号有下限，窄屏上可能换行，因此短词效果最好。 |
+| `heroHeadline` | 首页主标题，支持用 `\n` 换行。留空时使用站点介绍，没有介绍时使用站点名称。 |
+| `heroSubtitle` | 首页引言。留空时：主标题使用了站点介绍，则显示个人简介；否则显示站点介绍或个人简介。 |
+| `editorNote` | 首页侧栏的大字短句，支持换行。留空时使用个人资料中的个性签名，两者都为空时隐藏。 |
 | `homePostCount` | 首页文章数量，1–20，默认 6。 |
 | `showGeometry` | 首篇文章没有封面时，是否显示主题原创几何图形。关闭后显示简洁的字样封面。 |
 
@@ -55,13 +57,13 @@ settings: {
 
 Press 自带五种完整 renderer：
 
-- 首页：刊头、引言、首篇阅读入口、编号索引、作者和话题边栏。
+- 首页：刊头、主标题与引言、首篇文章入口、编号索引、作者和标签边栏。
 - 文章页：公开正文或密码解锁界面、目录、作者、发布时间、更新时间、字数与阅读时长、系列目录、相关文章及相邻文章。
-- 归档页：文章分页、分类入口、话题索引和 Core 全文搜索。
+- 归档页：文章分页、分类入口、标签索引和 Core 全文搜索。
 - 独立页面：显示 Core 提供的 Markdown 正文；内置关于页显示个人资料、联系方式、技能和项目。
-- 404 页面：返回首页及文章档案的入口。
+- 404 页面：返回首页及全部文章的入口。
 
-发布时间和更新时间使用站点语言及 `blog.timezone` 格式化。阅读统计、系列和推荐关系由 Core 提供，主题不会读取 Markdown 源文件或重新计算内容策略。没有配置可选数据时，对应区块会隐藏。
+发布时间和更新时间使用站点语言及 `blog.timezone` 格式化。阅读统计、系列和推荐关系由 Core 提供，主题不会读取 Markdown 源文件或重新计算内容策略。首页的最近更新时间涵盖全部可见文章，不受首页显示数量或置顶排序限制。没有配置可选数据时，对应区块会隐藏。
 
 桌面文章页保留页边目录和较窄的阅读栏；小屏幕变为单栏，目录仍可直接访问。导航直接使用普通链接，不依赖脚本展开菜单。尊重系统的减少动画设置。
 

@@ -8,7 +8,7 @@ const { post, language, timezone, compact = false } = Astro.props;
   <time datetime={post.publishedAt}>{formatDate(post.publishedAt, language, timezone)}</time>
   {!compact && post.updatedAt && post.updatedAt !== post.publishedAt && <span>更新于 <time datetime={post.updatedAt}>{formatDate(post.updatedAt, language, timezone)}</time></span>}
   {post.readingMinutes !== undefined && <span>{post.readingMinutes} 分钟阅读</span>}
-  {!compact && post.wordCount !== undefined && <span>{post.wordCount.toLocaleString(language)} 字词</span>}
+  {!compact && post.wordCount !== undefined && <span>{post.wordCount.toLocaleString(language)} 字</span>}
   {post.preview && <span class="status-label">本地预览</span>}
   {post.protected && <span class="status-label status-label--outline">密码文章</span>}
   {post.pinned && <span class="status-label status-label--outline">置顶</span>}
