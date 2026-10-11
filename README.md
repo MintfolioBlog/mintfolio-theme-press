@@ -18,15 +18,15 @@ mintfolio dev
 使用本地安装包时：
 
 ```sh
-mintfolio theme install ./mintfolio-theme-press-0.3.0.tgz --use
+mintfolio theme install ./mintfolio-theme-press-0.3.1.tgz --use
 ```
 
-Core 会生成站点自己的 `theme-press.config.mjs`。编辑它控制外观；站点名称、个人资料、导航、文章、作者和订阅配置仍位于 `site.config.ts` 及内容目录中。
+切换后 Core 会在站点 `theme.config.mjs` 的 `settings` 中写入带注释的设置，编辑它控制外观；站点名称、个人资料、导航、文章、作者和订阅配置仍位于 `site.config.ts` 及内容目录中。
 
 ## 外观设置
 
 ```js
-export default {
+settings: {
   accentColor: '#e6482e',
   paperColor: '#f3efe5',
   masthead: 'PRESS',
@@ -35,7 +35,7 @@ export default {
   editorNote: '观察。思考。\n然后，把它写下来。',
   homePostCount: 6,
   showGeometry: true,
-};
+},
 ```
 
 | 设置 | 用途 |
@@ -86,3 +86,6 @@ npm pack
 ## 0.3.0 发行
 
 主题包与 manifest 统一为 0.3.0，依赖 Mintfolio Core ^0.3.0。可使用 npm install @mintfolio/theme-press@0.3.0 安装，随后使用 mintfolio theme use @mintfolio/theme-press 切换。
+
+
+0.3.1：支持 Core 0.4，配置示例采用 `_mintfolio/theme.config.mjs` 的 `settings`。Core 0.3 用户仍按该版本的配置方式使用。
