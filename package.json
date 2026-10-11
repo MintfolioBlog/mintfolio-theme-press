@@ -1,6 +1,6 @@
 {
   "name": "@mintfolio/theme-press",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Press: an independent magazine theme for Mintfolio, with bold type and quiet reading.",
   "type": "module",
   "engines": {

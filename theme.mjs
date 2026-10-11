@@ -4,7 +4,7 @@ import { defineTheme } from '@mintfolio/core/theme';
 /** Press keeps editorial layout settings separate from the site's shared content. */
 export default defineTheme({
   manifest: {
-    id: 'press', name: 'Press', version: '0.4.1', engine: '^1.4.0',
+    id: 'press', name: 'Press', version: '0.4.2', engine: '^1.4.0',
     author: 'Mintfolio contributors',
     description: '奶油纸色、巨型刊头与细线版面的独立杂志主题。',
   },
