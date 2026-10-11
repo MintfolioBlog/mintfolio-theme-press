@@ -4,56 +4,65 @@ import type { PressSettings } from '../settings';
 import Shell from '../layouts/Shell.astro';
 import Geometry from '../components/Geometry.astro';
 import PostRow from '../components/PostRow.astro';
-import { imageSrc } from '../utils/display';
+import { formatDate, imageSrc } from '../utils/display';
 type Props = PageProps<PressSettings, HomePageData>;
 const { theme, page } = Astro.props;
+const { profile, description } = theme.site;
 const posts = page.posts.slice(0, theme.settings.homePostCount);
 const featured = posts[0];
 const cover = imageSrc(featured?.cover);
 const tags = (await theme.taxonomy.tags()).slice(0, 8);
-const headline = theme.settings.heroHeadline.trim() || theme.site.title;
-const subtitle = theme.settings.heroSubtitle.trim() || theme.site.description || theme.site.profile.bio;
-const avatar = imageSrc(theme.site.profile.avatar);
+const { items: sitePosts, total } = await theme.content.posts();
+// Unset copy falls back to the site's own words: description as the headline, bio beneath it, signature in the margin.
+const headline = theme.settings.heroHeadline.trim() || description || theme.site.title;
+const subtitle = theme.settings.heroSubtitle.trim() || (headline === description ? profile.bio : description || profile.bio);
+const note = theme.settings.editorNote.trim() || profile.signature;
+const bio = [profile.bio, profile.signature].find(text => text && text !== subtitle && text !== note);
+const avatar = imageSrc(profile.avatar);
+// A newly edited older article may fall outside the pinned/recent homepage slice.
+const updated = sitePosts.reduce<string | undefined>((latest, post) => {
+  const candidate = post.updatedAt ?? post.publishedAt;
+  return !latest || Date.parse(candidate) > Date.parse(latest) ? candidate : latest;
+}, undefined);
+const date = (value: string) => formatDate(value, theme.site.language, theme.site.blog?.timezone);
 ---
 <Shell theme={theme} page={page}>
   <section class="home-lead">
     <div class="home-lead__copy">
-      <p class="eyebrow"><span class="tiny-square" aria-hidden="true"></span> 个人观察 / FIELD NOTES</p>
       <h1 class="hero-title">{headline.split('\n').map(line => <span>{line}</span>)}</h1>
       {subtitle && <p class="hero-intro">{subtitle}</p>}
-      <a class="ink-button" href={theme.urls.archive()}>翻阅所有文章 <span aria-hidden="true">↗</span></a>
-      <div class="lead-colophon"><span>文字与日常之间。</span><span class="mono">{String(page.posts.length).padStart(3, '0')} ENTRIES</span></div>
+      <a class="ink-button" href={theme.urls.archive()}>浏览全部文章 <span aria-hidden="true">↗</span></a>
+      <div class="lead-colophon">{updated ? <span>最近更新 <time datetime={updated}>{date(updated)}</time></span> : <span></span>}<span><b>{total}</b> 篇文章</span></div>
     </div>
     <div class="cover-story">
-      <div class="cover-story__top"><span>{featured?.pinned ? '置顶阅读' : '从这篇开始'}</span><span class="mono">01 / SELECTED</span></div>
+      <div class="cover-story__top"><span>{featured?.pinned ? '置顶' : '最新'}</span>{featured && <time class="mono" datetime={featured.publishedAt}>{date(featured.publishedAt)}</time>}</div>
       {featured ? (
         <a href={featured.url} class="cover-story__link" aria-label={'阅读：' + featured.title}>
           <div class="cover-story__art">{cover ? <img src={cover} alt="" width="640" height="660" fetchpriority="high" /> : theme.settings.showGeometry ? <Geometry /> : <span class="cover-monogram" aria-hidden="true">Aa.</span>}</div>
           <div class="cover-story__caption"><h2>{featured.title}</h2><span aria-hidden="true">↗</span></div>
         </a>
       ) : (
-        <><div class="cover-story__art">{theme.settings.showGeometry ? <Geometry /> : <span class="cover-monogram" aria-hidden="true">Aa.</span>}</div><p class="cover-story__empty">下一篇，从这里开始。</p></>
+        <><div class="cover-story__art">{theme.settings.showGeometry ? <Geometry /> : <span class="cover-monogram" aria-hidden="true">Aa.</span>}</div><p class="cover-story__empty">暂无文章</p></>
       )}
     </div>
   </section>
 
   <div class="reading-grid">
     <section aria-labelledby="recent-title">
-      <div class="section-heading"><div><p class="eyebrow">THE READING INDEX</p><h2 id="recent-title">最近的文字</h2></div><a class="text-link" href={theme.urls.archive()}>全部文章 ↗</a></div>
+      <div class="section-heading"><h2 id="recent-title">最近文章</h2><a class="text-link" href={theme.urls.archive()}>全部文章 ↗</a></div>
       <div class="article-index">
-        {posts.length > 0 ? posts.map((post, index) => <PostRow post={post} index={index + 1} language={theme.site.language} timezone={theme.site.blog?.timezone} />) : <p class="empty-note">这里还没有已发布的文章。好文字值得等待。</p>}
+        {posts.length > 0 ? posts.map((post, index) => <PostRow post={post} index={index + 1} language={theme.site.language} timezone={theme.site.blog?.timezone} />) : <p class="empty-note">还没有已发布的文章。</p>}
       </div>
     </section>
-    <aside class="margin-notes" aria-label="页边手记">
-      <div class="margin-heading"><span class="eyebrow">MARGINALIA</span><span aria-hidden="true">✳</span></div>
-      <p class="editor-note">{theme.settings.editorNote.split('\n').map(line => <span>{line}</span>)}</p>
+    <aside class="margin-notes" aria-label="作者">
+      <div class="margin-heading"><span class="eyebrow">作者</span><span aria-hidden="true">✳</span></div>
+      {note && <p class="editor-note">{note.split('\n').map(line => <span>{line}</span>)}</p>}
       <div class="editor-profile">
         {avatar && <img src={avatar} width="52" height="52" alt="" loading="lazy" />}
-        <div><span class="eyebrow">此刊编辑</span><a href={theme.urls.page('about')}>{theme.site.profile.name || theme.site.title} ↗</a></div>
+        <div><a href={theme.urls.page('about')}>{profile.name || theme.site.title} ↗</a>{profile.location && <span class="mono">{profile.location}</span>}</div>
       </div>
-      {(theme.site.profile.bio || theme.site.profile.signature) && <p class="margin-bio">{theme.site.profile.bio || theme.site.profile.signature}</p>}
-      {tags.length > 0 && <div class="topic-index"><p class="eyebrow">常写的话题</p>{tags.map(tag => <a href={tag.url}><span>{tag.label}</span><span class="mono">{String(tag.count).padStart(2, '0')} ↗</span></a>)}</div>}
-      <p class="margin-bottom mono">WRITE SOMETHING<br />WORTH KEEPING.</p>
+      {bio && <p class="margin-bio">{bio}</p>}
+      {tags.length > 0 && <div class="topic-index"><p class="eyebrow">标签</p>{tags.map(tag => <a href={tag.url}><span>{tag.label}</span><span class="mono">{String(tag.count).padStart(2, '0')}</span></a>)}</div>}
     </aside>
   </div>
 </Shell>

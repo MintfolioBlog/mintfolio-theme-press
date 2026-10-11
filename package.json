@@ -8,6 +8,7 @@
   },
   "files": [
     "theme.mjs",
+    "examples",
     "settings.ts",
     "pages",
     "layouts",
@@ -29,11 +30,11 @@
     "configTemplate": "./config/theme-press.config.mjs"
   },
   "peerDependencies": {
-    "@mintfolio/core": "^0.4.1",
+    "@mintfolio/core": "^0.4.2",
     "astro": "^7.3.2"
   },
   "devDependencies": {
-    "@mintfolio/core": "^0.4.1",
+    "@mintfolio/core": "^0.4.2",
     "@astrojs/check": "^0.9.10",
     "astro": "^7.3.2",
     "typescript": "npm:@typescript/typescript6@^6.0.2"
